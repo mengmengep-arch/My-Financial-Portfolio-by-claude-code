@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Portfolio Manager - Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            line-height: 1.5;
+            color: #1e293b;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .hero { text-align: center; padding: 4rem 0; }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: #64748b;
+            max-width: 42rem;
+            margin: 0 auto 2rem;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+        }
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: #1e293b;
+            color: white;
+        }
+        .btn-primary:hover { background: #334155; }
+        .btn-secondary {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+        .btn-secondary:hover { background: #f8fafc; }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .card:hover { border-color: #2563eb; }
+        .card svg {
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #2563eb;
+            margin-bottom: 1rem;
+        }
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        .card p { color: #64748b; font-size: 0.875rem; }
+        .mvp-features {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            max-width: 56rem;
+            margin: 0 auto 4rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .mvp-features h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        .mvp-features .subtitle {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+        .mvp-features ul { list-style: none; }
+        .mvp-features li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .mvp-features li::before {
+            content: "✓";
+            color: #2563eb;
+            font-weight: bold;
+        }
+        footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            text-align: center;
+            color: #64748b;
+            margin-top: 4rem;
+        }
+        footer p { margin: 0.25rem 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>Financial Portfolio Manager</h1>
+            <p>Professional-grade portfolio management application for tracking investments, analyzing performance, and optimizing your financial strategy.</p>
+            <div class="buttons">
+                <a href="#" class="btn btn-primary">Get Started</a>
+                <a href="#" class="btn btn-secondary">Sign In</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                    <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <h3>Real-Time Tracking</h3>
+                <p>Monitor your portfolio value with live market data updates</p>
+            </div>
+
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                    <path d="M22 12A10 10 0 0 0 12 2v10z"></path>
+                </svg>
+                <h3>Asset Allocation</h3>
+                <p>Visualize and optimize your investment distribution</p>
+            </div>
+
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path d="M3 3v18h18"></path>
+                    <path d="M18 17V9"></path>
+                    <path d="M13 17V5"></path>
+                    <path d="M8 17v-3"></path>
+                </svg>
+                <h3>Performance Analytics</h3>
+                <p>Track returns, risk metrics, and compare with benchmarks</p>
+            </div>
+
+            <div class="card">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <line x1="12" x2="12" y1="2" y2="22"></line>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <h3>Tax Optimization</h3>
+                <p>Minimize tax liabilities with intelligent selling strategies</p>
+            </div>
+        </div>
+
+        <div class="mvp-features">
+            <h2>Phase 1 MVP Features</h2>
+            <p class="subtitle">Currently available features in the first release</p>
+            <ul>
+                <li>User authentication with 2FA support</li>
+                <li>Manual portfolio and transaction entry</li>
+                <li>OCR support for Thai broker screenshots (Streaming, Settrade)</li>
+                <li>Interactive dashboard with portfolio value and allocation charts</li>
+                <li>Basic performance calculations (returns, profit/loss)</li>
+                <li>Support for Thai and international stocks, funds, ETFs</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p><strong>Financial Portfolio Manager - Phase 1 MVP</strong></p>
+            <p style="font-size: 0.875rem;">Built with Next.js, PostgreSQL, and Prisma</p>
+        </div>
+    </footer>
+
+    <script>
+        console.log('🎉 Financial Portfolio Manager Preview');
+        console.log('📊 This is a static preview of your landing page');
+        console.log('🚀 The actual app is running at http://localhost:3000');
+    </script>
+</body>
+</html>
