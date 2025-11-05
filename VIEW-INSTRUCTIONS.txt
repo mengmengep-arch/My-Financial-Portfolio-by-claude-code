@@ -1,0 +1,41 @@
+===============================================
+HOW TO VIEW YOUR LANDING PAGE
+===============================================
+
+OPTION 1: Download PREVIEW.html
+--------------------------------
+1. In the file browser, find: PREVIEW.html
+2. RIGHT-CLICK on the file
+3. Choose "Download" or "Save As"
+4. Open the downloaded file in your browser
+
+The file is completely standalone - no internet needed!
+
+
+OPTION 2: Direct Server Access
+--------------------------------
+The Next.js server IS running at: http://localhost:3000
+
+In Claude Code Web, this port might not be automatically forwarded.
+
+
+OPTION 3: Copy-Paste Method
+----------------------------
+If download doesn't work:
+1. Open PREVIEW.html in the editor
+2. Copy ALL the content (Ctrl+A, Ctrl+C)
+3. Create a new .html file on your desktop
+4. Paste the content
+5. Save and open in browser
+
+
+WHAT YOU'LL SEE:
+----------------
+✓ Large gradient title: "Financial Portfolio Manager"
+✓ Hero description and buttons
+✓ 4 feature cards (Real-Time, Asset Allocation, etc.)
+✓ Phase 1 MVP features checklist
+✓ Professional footer
+
+This is your landing page design!
+===============================================
