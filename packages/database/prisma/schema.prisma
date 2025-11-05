@@ -1,0 +1,210 @@
+// Prisma Schema for Financial Portfolio Management Application
+// Database: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id                String      @id @default(uuid())
+  email             String      @unique
+  encryptedPassword String      @map("encrypted_password")
+  twoFactorSecret   String?     @map("two_factor_secret")
+  twoFactorEnabled  Boolean     @default(false) @map("two_factor_enabled")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+
+  portfolios        Portfolio[]
+  sessions          Session[]
+  alerts            Alert[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  token        String   @unique
+  refreshToken String   @unique @map("refresh_token")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+// Portfolio Management
+model Portfolio {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  name         String
+  baseCurrency String    @default("THB") @map("base_currency") @db.Char(3)
+  isDefault    Boolean   @default(false) @map("is_default")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  holdings     Holding[]
+  transactions Transaction[]
+  snapshots    PortfolioSnapshot[]
+
+  @@index([userId])
+  @@map("portfolios")
+}
+
+// Asset Information
+model Asset {
+  id        String   @id @default(uuid())
+  symbol    String
+  name      String
+  assetType String   @map("asset_type") @db.VarChar(50)
+  exchange  String?  @db.VarChar(50)
+  sector    String?  @db.VarChar(100)
+  industry  String?  @db.VarChar(100)
+  currency  String   @db.Char(3)
+  metadata  Json?    // Additional broker-specific or custom data
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  holdings     Holding[]
+  transactions Transaction[]
+  priceHistory PriceHistory[]
+
+  @@unique([symbol, exchange])
+  @@index([symbol])
+  @@index([assetType])
+  @@map("assets")
+}
+
+// Holdings (Current Positions)
+model Holding {
+  id                String   @id @default(uuid())
+  portfolioId       String   @map("portfolio_id")
+  assetId           String   @map("asset_id")
+  quantity          Decimal  @db.Decimal(18, 8)
+  averageCost       Decimal  @map("average_cost") @db.Decimal(18, 8)
+  firstPurchaseDate DateTime @map("first_purchase_date") @db.Date
+  lastUpdate        DateTime @default(now()) @map("last_update")
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  asset     Asset     @relation(fields: [assetId], references: [id])
+
+  @@unique([portfolioId, assetId])
+  @@index([portfolioId])
+  @@index([assetId])
+  @@map("holdings")
+}
+
+// Transaction History
+model Transaction {
+  id              String   @id @default(uuid())
+  portfolioId     String   @map("portfolio_id")
+  assetId         String   @map("asset_id")
+  transactionType String   @map("transaction_type") @db.VarChar(20)
+  quantity        Decimal  @db.Decimal(18, 8)
+  price           Decimal  @db.Decimal(18, 8)
+  fees            Decimal  @default(0) @db.Decimal(18, 8)
+  transactionDate DateTime @map("transaction_date")
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  asset     Asset     @relation(fields: [assetId], references: [id])
+
+  @@index([portfolioId, transactionDate(sort: Desc)])
+  @@index([assetId])
+  @@map("transactions")
+}
+
+// Price History (Time-series data)
+model PriceHistory {
+  assetId   String   @map("asset_id")
+  timestamp DateTime
+  open      Decimal  @db.Decimal(18, 8)
+  high      Decimal  @db.Decimal(18, 8)
+  low       Decimal  @db.Decimal(18, 8)
+  close     Decimal  @db.Decimal(18, 8)
+  volume    BigInt
+
+  asset Asset @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@id([assetId, timestamp])
+  @@index([assetId, timestamp(sort: Desc)])
+  @@map("price_history")
+}
+
+// Portfolio Snapshots (Daily aggregated data)
+model PortfolioSnapshot {
+  portfolioId    String   @map("portfolio_id")
+  snapshotDate   DateTime @map("snapshot_date") @db.Date
+  totalValue     Decimal  @map("total_value") @db.Decimal(18, 8)
+  totalCost      Decimal  @map("total_cost") @db.Decimal(18, 8)
+  dailyReturn    Decimal? @map("daily_return") @db.Decimal(10, 6)
+  allocationData Json     @map("allocation_data")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  portfolio Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+
+  @@id([portfolioId, snapshotDate])
+  @@index([portfolioId, snapshotDate(sort: Desc)])
+  @@map("portfolio_snapshots")
+}
+
+// OCR Sessions (Temporary storage for OCR processing)
+model OCRSession {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  brokerType   String   @map("broker_type") @db.VarChar(50)
+  imageUrl     String   @map("image_url")
+  extractedData Json    @map("extracted_data")
+  confidence   Decimal  @db.Decimal(5, 4)
+  status       String   @default("PENDING") @db.VarChar(20) // PENDING, CONFIRMED, REJECTED
+  createdAt    DateTime @default(now()) @map("created_at")
+  expiresAt    DateTime @map("expires_at")
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("ocr_sessions")
+}
+
+// Price Alerts
+model Alert {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  assetSymbol String   @map("asset_symbol")
+  condition   String   // "ABOVE", "BELOW", "CHANGE_PERCENT"
+  targetValue Decimal  @map("target_value") @db.Decimal(18, 8)
+  isActive    Boolean  @default(true) @map("is_active")
+  lastTriggered DateTime? @map("last_triggered")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isActive])
+  @@index([assetSymbol, isActive])
+  @@map("alerts")
+}
+
+// Audit Log (for security and compliance)
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?  @map("user_id")
+  action    String   @db.VarChar(100)
+  resource  String   @db.VarChar(100)
+  resourceId String? @map("resource_id")
+  details   Json?
+  ipAddress String?  @map("ip_address") @db.VarChar(45)
+  userAgent String?  @map("user_agent") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([resource, resourceId])
+  @@map("audit_logs")
+}
