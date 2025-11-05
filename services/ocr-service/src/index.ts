@@ -71,7 +71,7 @@ export class OCRService {
    * Extract holdings data based on broker template
    */
   private extractHoldings(text: string, brokerType: BrokerType): ExtractedHolding[] {
-    const template = BROKER_TEMPLATES[brokerType];
+    const template = BROKER_TEMPLATES[brokerType as keyof typeof BROKER_TEMPLATES];
     if (!template) {
       return [];
     }
@@ -185,7 +185,7 @@ export class OCRService {
       // Detect broker type if not provided
       let detectedBrokerType = brokerType;
       if (!detectedBrokerType) {
-        detectedBrokerType = await this.detectBrokerType(text);
+        detectedBrokerType = (await this.detectBrokerType(text)) || undefined;
       }
 
       if (!detectedBrokerType) {

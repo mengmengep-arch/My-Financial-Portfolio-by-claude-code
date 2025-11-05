@@ -8,13 +8,13 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
 const REFRESH_TOKEN_EXPIRES_IN = process.env.REFRESH_TOKEN_EXPIRES_IN || '7d';
 
 function generateTokens(userId: string) {
-  const accessToken = jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: JWT_EXPIRES_IN,
-  });
+  const accessToken = jwt.sign({ userId }, JWT_SECRET as jwt.Secret, {
+    expiresIn: JWT_EXPIRES_IN as string,
+  } as jwt.SignOptions);
 
-  const refreshToken = jwt.sign({ userId }, JWT_SECRET, {
-    expiresIn: REFRESH_TOKEN_EXPIRES_IN,
-  });
+  const refreshToken = jwt.sign({ userId }, JWT_SECRET as jwt.Secret, {
+    expiresIn: REFRESH_TOKEN_EXPIRES_IN as string,
+  } as jwt.SignOptions);
 
   return { accessToken, refreshToken };
 }

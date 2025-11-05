@@ -80,8 +80,8 @@ export const resolvers = {
       });
     },
     value: async (parent: any, _args: any, context: any) => {
-      const { calculatePortfolioValue } = await import('@financial-portfolio/database');
-      return calculatePortfolioValue(parent.id);
+      const { dbHelpers } = await import('@financial-portfolio/database');
+      return dbHelpers.calculatePortfolioValue(parent.id);
     },
   },
 

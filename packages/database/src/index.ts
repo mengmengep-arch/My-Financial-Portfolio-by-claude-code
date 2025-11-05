@@ -125,7 +125,7 @@ export const dbHelpers = {
 
     // Calculate allocation data
     const allocationByType: Record<string, number> = {};
-    holdings.forEach((holding) => {
+    holdings.forEach((holding: any) => {
       const assetType = holding.asset.assetType;
       if (!allocationByType[assetType]) {
         allocationByType[assetType] = 0;
